@@ -1,0 +1,18 @@
+[
+  {
+    "id": 1,
+    "nombre": "Pelota de fútbol",
+    "descripcion": "Pelota oficial tamaño 5",
+    "precio": 1200,
+    "stock": 10,
+    "imagen": "/images/pelota.jpg"
+  },
+  {
+    "id": 2,
+    "nombre": "Raqueta de tenis",
+    "descripcion": "Raqueta profesional",
+    "precio": 3500,
+    "stock": 5,
+    "imagen": "/images/raqueta.jpg"
+  }
+]
