@@ -19,7 +19,7 @@ export default function PerfilPage() {
       return;
     }
 
-    getUserById(user.userId, token)
+    getUserById(user.idUser, token)
       .then((data) => {
         setUsuario(data);
         setDireccion(data.shippingAddress || "");
