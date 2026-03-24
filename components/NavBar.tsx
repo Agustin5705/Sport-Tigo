@@ -2,6 +2,7 @@ import { useContext } from "react";
 import { CartContext } from "@/context/CartContext";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import { jwtDecode } from "jwt-decode";
 
 export default function Navbar() {
   const cartContext = useContext(CartContext);
@@ -11,28 +12,25 @@ export default function Navbar() {
 
   const router = useRouter();
 
-  // leer usuario de localStorage
-  let usuarioNombre: string | null = null;
+  let token: string | null = null;
+  let email: string | null = null;
+
   if (typeof window !== "undefined") {
-    const savedUser = localStorage.getItem("sessionUser");
-    if (savedUser) {
+    token = localStorage.getItem("sessionToken");
+    if (token) {
       try {
-        const parsed = JSON.parse(savedUser);
-        usuarioNombre = parsed.nombre; // o parsed.email
+        const payload = jwtDecode<{ sub: string }>(token);
+        email = payload.sub; // el email del usuario
       } catch {
-        usuarioNombre = null;
+        email = null;
       }
     }
   }
 
   const logout = () => {
-    localStorage.removeItem("sessionUser");
-    localStorage.removeItem("cart");
-    localStorage.removeItem("ordenes");
+    localStorage.removeItem("sessionToken");
     document.cookie =
       "sessionToken=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
-    localStorage.removeItem("sessionToken");
-
     router.push("/login");
   };
 
@@ -45,33 +43,23 @@ export default function Navbar() {
       </li>
       <ul className="flex space-x-6 items-center">
         <li>
-          <Link href="/registro" className="hover:underline">
-            Registro
-          </Link>
+          <Link href="/registro">Registro</Link>
         </li>
         <li>
-          <Link href="/catalogo" className="hover:underline">
-            Catálogo
-          </Link>
+          <Link href="/catalogo">Catálogo</Link>
         </li>
         <li>
-          <Link href="/carrito" className="hover:underline">
-            Carrito ({cartCount})
-          </Link>
+          <Link href="/carrito">Carrito ({cartCount})</Link>
         </li>
         <li>
-          <Link href="/ordenes" className="hover:underline">
-            Órdenes
-          </Link>
+          <Link href="/ordenes">Órdenes</Link>
         </li>
         <li>
-          <Link href="/perfil" className="hover:underline">
-            Perfil
-          </Link>
+          <Link href="/perfil">Perfil</Link>
         </li>
-        {usuarioNombre ? (
+        {token ? (
           <>
-            <li className="font-semibold">Hola, {usuarioNombre}</li>
+            <li>{email}</li>
             <li>
               <button
                 onClick={logout}
@@ -83,9 +71,7 @@ export default function Navbar() {
           </>
         ) : (
           <li>
-            <Link href="/login" className="hover:underline">
-              Login
-            </Link>
+            <Link href="/login">Login</Link>
           </li>
         )}
       </ul>

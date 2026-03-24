@@ -12,12 +12,14 @@ export default function PerfilPage() {
   useEffect(() => {
     const token = localStorage.getItem("sessionToken");
     const user = getUserFromToken();
+    console.log("PerfilPage token:", token);
+    console.log("PerfilPage user:", user);
     if (!token || !user) {
       router.push("/login");
       return;
     }
 
-    getUserById(user.idUser, token)
+    getUserById(user.userId, token)
       .then((data) => {
         setUsuario(data);
         setDireccion(data.shippingAddress || "");

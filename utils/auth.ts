@@ -1,8 +1,8 @@
 import { jwtDecode } from "jwt-decode";
 
 interface TokenPayload {
-  idUser: number;
-  email: string;
+  userId: number;
+  sub: string; // email
 }
 
 export function getUserFromToken(): TokenPayload | null {
