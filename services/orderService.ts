@@ -1,4 +1,4 @@
-import { Order } from "@/types/Interfaces";
+import { Order, CartProduct } from "@/types/Interfaces";
 
 export async function getOrders(
   userId: number,
@@ -16,19 +16,17 @@ export async function getOrders(
 
 export async function createOrder(
   userId: number,
-  newShippingAddress: string | null,
+  cart: CartProduct[],
   token: string,
+  newShippingAddress?: string,
 ): Promise<{ orderNumber: string }> {
-  const url = newShippingAddress
-    ? `http://localhost:8080/orders/buy/${userId}?newShippingAddress=${encodeURIComponent(newShippingAddress)}`
-    : `http://localhost:8080/orders/buy/${userId}`;
-
-  const res = await fetch(url, {
+  const res = await fetch(`http://localhost:8080/orders/buy/${userId}`, {
+    method: "POST",
     headers: {
+      "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,
     },
+    body: JSON.stringify({ cart, newShippingAddress }),
   });
-
-  if (!res.ok) throw new Error("Error al crear orden");
   return res.json();
 }
